@@ -6,7 +6,7 @@ this application takes a image and converts it into raw Black and White Bytes fo
 ### Usage
 
 | Command       | Type   | Description                                                                             |
-| ------------- |:------:| ---------------------------------------------------------------------------------------:|
+| ------------- |:------:|:--------------------------------------------------------------------------------------- |
 | -inputFile    | string | input image file. (Required)                                                            |
 | -outputFile   | string | output .b file. (Required)                                                              |
 | -displaySizeX | int    | sets the with of the screen (defaults to 128) (default 128)                             |
