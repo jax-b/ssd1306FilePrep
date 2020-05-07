@@ -11,7 +11,7 @@ import (
 	"os"
 )
 
-func openImage(filename string) (loadedImage image.Image) {
+func OpenImage(filename string) (loadedImage image.Image) {
 	// Read image from file that already exists
 	existingImageFile, err := os.Open(filename)
 	if err != nil {
@@ -36,13 +36,14 @@ func openImage(filename string) (loadedImage image.Image) {
 		loadedImage, err = jpeg.Decode(existingImageFile)
 	default:
 		err = errors.New("FileType Not Detected")
+		log.Fatal(err)
 	}
 	if err != nil {
 		log.Fatal(err)
 	}
 	return loadedImage
 }
-func convertBW(imgToConvert image.Image, threshold uint8) (convertedImage *image.Gray) {
+func ConvertBW(imgToConvert image.Image, threshold uint8) (convertedImage *image.Gray) {
 	w, h := imgToConvert.Bounds().Max.X, imgToConvert.Bounds().Max.Y
 	grayScale := image.NewGray(image.Rectangle{image.Point{0, 0}, image.Point{w, h}})
 	grayWhite := color.Gray{uint8(255)}
@@ -67,7 +68,7 @@ func convertBW(imgToConvert image.Image, threshold uint8) (convertedImage *image
 	}
 	return grayScale
 }
-func toBWByteSlice(imgToConvert *image.Gray, threshold uint8) (outputBytes [][]byte) {
+func ToBWByteSlice(imgToConvert *image.Gray, threshold uint8) (outputBytes [][]byte) {
 	w, h := imgToConvert.Bounds().Max.X, imgToConvert.Bounds().Max.Y
 	outputBytes = make([][]byte, h/8, h/8)
 	for i := 0; i < len(outputBytes); i++ {
@@ -107,7 +108,7 @@ func toBWByteSlice(imgToConvert *image.Gray, threshold uint8) (outputBytes [][]b
 	}
 	return outputBytes
 }
-func writeImage(imgToWrite image.Image, fileName string) {
+func WriteImage(imgToWrite image.Image, fileName string) {
 	newfile, err := os.Create(fileName)
 	if err != nil {
 		log.Fatal(err)
@@ -115,7 +116,7 @@ func writeImage(imgToWrite image.Image, fileName string) {
 	defer newfile.Close()
 	png.Encode(newfile, imgToWrite)
 }
-func writeBWByte(ByteSlice [][]byte, fileName string) {
+func WriteBWByte(ByteSlice [][]byte, fileName string) {
 	newfile, err := os.Create(fileName)
 	if err != nil {
 		log.Fatal(err)
