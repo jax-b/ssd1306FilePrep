@@ -1,4 +1,4 @@
-package ssd1306FilePrep
+package ssd1306fileprep
 
 import (
 	"errors"
@@ -11,6 +11,7 @@ import (
 	"os"
 )
 
+// OpenImage opens a image
 func OpenImage(filename string) (loadedImage image.Image) {
 	// Read image from file that already exists
 	existingImageFile, err := os.Open(filename)
@@ -43,6 +44,8 @@ func OpenImage(filename string) (loadedImage image.Image) {
 	}
 	return loadedImage
 }
+
+// ConvertBW converts a image to black and white
 func ConvertBW(imgToConvert image.Image, threshold uint8) (convertedImage *image.Gray) {
 	w, h := imgToConvert.Bounds().Max.X, imgToConvert.Bounds().Max.Y
 	grayScale := image.NewGray(image.Rectangle{image.Point{0, 0}, image.Point{w, h}})
@@ -68,6 +71,8 @@ func ConvertBW(imgToConvert image.Image, threshold uint8) (convertedImage *image
 	}
 	return grayScale
 }
+
+// ToBWByteSlice converts a gray image to a black and white byte slice structured like the ssd1306 graphics ram
 func ToBWByteSlice(imgToConvert *image.Gray, threshold uint8) (outputBytes [][]byte) {
 	w, h := imgToConvert.Bounds().Max.X, imgToConvert.Bounds().Max.Y
 	outputBytes = make([][]byte, h/8, h/8)
@@ -79,7 +84,7 @@ func ToBWByteSlice(imgToConvert *image.Gray, threshold uint8) (outputBytes [][]b
 		for currentX := 0; currentX < w; currentX++ {
 			var constructedVLine byte = 0
 			if imgToConvert.GrayAt(currentX, 0+(8*currentY)).Y >= threshold {
-				constructedVLine += 1
+				constructedVLine++
 			}
 			if imgToConvert.GrayAt(currentX, 1+(8*currentY)).Y >= threshold {
 				constructedVLine += 2
@@ -108,6 +113,8 @@ func ToBWByteSlice(imgToConvert *image.Gray, threshold uint8) (outputBytes [][]b
 	}
 	return outputBytes
 }
+
+// WriteImage wires a image to a file
 func WriteImage(imgToWrite image.Image, fileName string) {
 	newfile, err := os.Create(fileName)
 	if err != nil {
@@ -116,6 +123,8 @@ func WriteImage(imgToWrite image.Image, fileName string) {
 	defer newfile.Close()
 	png.Encode(newfile, imgToWrite)
 }
+
+// WriteBWByte Writes a byteslice to file
 func WriteBWByte(ByteSlice [][]byte, fileName string) {
 	newfile, err := os.Create(fileName)
 	if err != nil {

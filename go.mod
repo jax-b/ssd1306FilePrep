@@ -1,4 +1,4 @@
-module github.com/jax-b/ssd1306FilePrep
+module github.com/jax-b/ssd1306fileprep
 
 go 1.14
 
